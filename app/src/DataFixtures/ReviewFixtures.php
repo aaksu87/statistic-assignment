@@ -16,9 +16,13 @@ class ReviewFixtures extends Fixture
 
     public function load(ObjectManager $manager)
     {
+        $manager->getConnection()->getConfiguration()->setSQLLogger(null);
+
         $this->faker = Factory::create();
 
-        for ($i = 0; $i < 10000; $i++) {
+        $batchSize = 500;
+
+        for ($i = 0; $i < 100000; $i++) {
 
             $record = new Review();
             $record->setHotel($this->getReference(HotelFixtures::HOTEL_FIXTURE_REFERANCE . '_' . $this->faker->numberBetween(0, 9)));
@@ -27,6 +31,12 @@ class ReviewFixtures extends Fixture
             $record->setCreatedDate($this->faker->dateTimeBetween($startDate = '-2 years', $endDate = 'now', $timezone = null));
 
             $manager->persist($record);
+
+            // Avoid memory overflows. If it's still a problem, you may reduce batch size
+            if ($i % $batchSize == 0) {
+                $manager->flush();
+                $manager->clear();
+            }
         }
 
         $manager->flush();

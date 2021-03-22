@@ -52,7 +52,6 @@ class StatisticService
      */
     public function reviewStatistic(): array
     {
-        //return [$this->hotelId];
         $hotel = $this->hotelRepository->find($this->hotelId);
 
         if (!$hotel) {

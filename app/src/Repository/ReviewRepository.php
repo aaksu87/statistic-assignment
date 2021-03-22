@@ -14,7 +14,7 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ReviewRepository extends ServiceEntityRepository
 {
-    private $resultType = 'daily';
+    private string $resultType = 'daily';
 
     public function __construct(ManagerRegistry $registry)
     {
@@ -37,8 +37,8 @@ class ReviewRepository extends ServiceEntityRepository
         $this->resultType = $resultType;
     }
 
-    public function getDateGroupedStatistic($hotelId, $startDate, $endDate){
-
+    public function getDateGroupedStatistic($hotelId, $startDate, $endDate)
+    {
         $groupByDateFormats = [
             'daily' => '%Y-%m-%d',
             'weekly' => '%Y-%v',
@@ -47,7 +47,7 @@ class ReviewRepository extends ServiceEntityRepository
 
         $query = $this->createQueryBuilder('r')
             ->select('
-                DATE_FORMAT(r.created_date, \''.$groupByDateFormats[$this->getResultType()].'\') AS date_group, 
+                DATE_FORMAT(r.created_date, \'' . $groupByDateFormats[$this->getResultType()] . '\') AS date_group, 
                 COUNT(r.id) AS review_count, 
                 ROUND(AVG(r.score),5) AS average_score'
             )
@@ -62,8 +62,8 @@ class ReviewRepository extends ServiceEntityRepository
         return $query->getQuery()->getResult();
     }
 
-    public function getOverTimeAverage($hotelId, $startDate){
-
+    public function getOverTimeAverage($hotelId, $startDate)
+    {
         $query = $this->createQueryBuilder('r')
             ->select('                 
                 COUNT(r.id) AS overtime_review_count, 

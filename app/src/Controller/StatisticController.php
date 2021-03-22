@@ -57,15 +57,15 @@ class StatisticController extends AbstractController
 
             $dtoData = $this->reviewStatisticResponseDtoTransformer->transformFromObjects($statisticData);
 
-            $dtoData = $this->serializer->serialize($dtoData,'json');
+            $serializedData = $this->serializer->serialize($dtoData, 'json');
 
-            return (new ApiResponse($dtoData,Response::HTTP_OK))->send();
+            return (new ApiResponse($serializedData, Response::HTTP_OK))->send();
 
         } catch (NoHotelException | ValidationException $e) {
-            return (new ApiResponse($e->getMessage(),Response::HTTP_BAD_REQUEST))->send();
+            return (new ApiResponse($e->getMessage(), Response::HTTP_BAD_REQUEST))->send();
         } catch (\Exception $e) {
             $this->logger->error('Statistic Error: ' . $e->getMessage());
-            return (new ApiResponse('Something is wrong',Response::HTTP_BAD_REQUEST))->send();
+            return (new ApiResponse('Something is wrong', Response::HTTP_BAD_REQUEST))->send();
         }
     }
 }
